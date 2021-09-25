@@ -1,16 +1,14 @@
-use std::convert::TryInto;
-
-pub fn sort<T: PartialOrd + Copy + Ord>(mut a: Vec<T>) {
+pub fn sort<T: PartialOrd + Copy + Ord>(a: &mut Vec<T>) {
     for i in 1..a.len() {
         let x = a[i]; // Copy value here
-        let mut j = i;
+        let mut j: isize = (i - 1) as isize;
 
-        while j > 0 && a[j] > x {
+        while j >= 0 && a[j as usize] > x {
+            a[(j + 1) as usize] = a[j as usize];
             j = j - 1;
-            a[j+1] = a[j];
         }
 
-        a[j] = x
+        a[(j + 1) as usize] = x
     }
 }
 
@@ -20,8 +18,10 @@ mod test {
 
     #[test]
     fn check_insert() {
-        let mut array = vec![3,2,6,8,2,4,5,9,1,2,3,4,9,7];
-        let mut arrayc: Vec::<i32> = Vec::new();
-        assert_eq!(sort(array), arrayc.sort())
+        let mut array = vec![3, 2, 6, 8, 2, 4, 5, 9, 1, 2, 3, 4, 9, 7];
+        sort(&mut array);
+        let mut new_array = array.to_vec();
+        new_array.sort();
+        assert_eq!(array, *new_array);
     }
 }
